@@ -17,10 +17,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '20.10.0'
-
-    - name: Install Turtle CLI
-      run: npm install -g turtle-cli
-
+        
     - name: install expo
       run: npm install expo
 
@@ -31,7 +28,7 @@ jobs:
       run: npx expo prebuild --platform android
 
     - name: eject from expo
-      run: expo eject
+      run: npx expo eject
 
     - name: Set up JDK 11
       uses: actions/setup-java@v2
@@ -57,6 +54,9 @@ jobs:
         chmod +x ./gradlew
         ./gradlew assembleRelease
 
+######TURTLE CI#########
+    # - name: Install Turtle CLI
+    #   run: npm install -g turtle-cli
       #   - name: Setup Android Keystore
       # env:
       #   KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -65,7 +65,7 @@ jobs:
       # run: |
       #   echo $KEYSTORE_BASE64 | base64 --decode > ./my-release-key.keystore
 
-    # - name: Build APK
+    # - name: Build APK with turtle cli
     #   run: |
     #     turtle build:android \
     #       --keystore-path ./my-release-key.keystore \
@@ -75,9 +75,7 @@ jobs:
     #       --allow-non-https-public-url \
     #       -o .
 
-    # - name: list the files
-    #   run: ls -ltr android/app
-      
+######################      
     # # Deploy to S3
     # - name: Deploy to S3
     #   run: |
