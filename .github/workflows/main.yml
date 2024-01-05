@@ -1,0 +1,32 @@
+name: React-expo-CI-CD
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.10.0'
+
+    - name: install expo
+      run: npm install expo
+
+    - name: install expo dependencies
+      run: npx expo install react-dom react-native-web @expo/webpack-config
+
+    #you can also use these flags in the following compile cmd --variant debug or --variant release
+    - name: Build for android
+      run: npx expo run:android --no-build-cache
+
+
+#      run: npx expo run:ios --no-build-cache
