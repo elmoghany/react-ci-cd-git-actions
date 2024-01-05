@@ -18,9 +18,10 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.elmoghany.free-cicd-for-react-expo"
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+	"backgroundColor": "#ffffff"
       }
     },
     "web": {
