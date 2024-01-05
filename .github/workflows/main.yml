@@ -18,17 +18,37 @@ jobs:
       with:
         node-version: '20.10.0'
 
+    - name: Install Turtle CLI
+      run: npm install -g turtle-cli
+
     - name: install expo
       run: npm install expo
 
     - name: install expo dependencies
       run: npx expo install react-dom react-native-web @expo/webpack-config
 
-    - name: Prebuild expo project
+    - name: Prebuild ANDROID expo project 
       run: npx expo prebuild --platform android
 
+    - name: Setup Android Keystore
+      env:
+        KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      run: |
+        echo $KEYSTORE_BASE64 | base64 --decode > ./my-release-key.keystore
+        
+    - name: Build APK
+      run: |
+        turtle build:android \
+          --keystore-path ./my-release-key.keystore \
+          --keystore-alias $KEY_ALIAS \
+          --keystore-password $KEYSTORE_PASSWORD \
+          --key-password $KEY_PASSWORD \
+          --type apk \
+          --allow-non-https-public-url
+    
     #you can also use these flags in the following compile cmd --variant debug or --variant release
 #    - name: Build for android
-#      run:  eas build --local
-
 #      run: npx expo run:ios --no-build-cache
