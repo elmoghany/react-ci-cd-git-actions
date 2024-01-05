@@ -51,10 +51,11 @@ jobs:
           --keystore-alias $KEY_ALIAS \
           --keystore-password $KEYSTORE_PASSWORD \
           --type apk \
-          --allow-non-https-public-url
+          --allow-non-https-public-url \
+          -o .
 
     - name: list the files
-      run: ls -ltr android/
+      run: ls -ltr android/app
       
     # Deploy to S3
     - name: Deploy to S3
