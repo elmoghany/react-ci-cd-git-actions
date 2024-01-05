@@ -22,7 +22,7 @@ jobs:
       run: npx install expo@49.0.21
 
     - name: install other dependencies
-           npx expo install react-dom react-native-web @expo/webpack-config
+      run: npx expo install react-dom react-native-web @expo/webpack-config
 
     #you can also use these flags in the following compile cmd --variant debug or --variant release
     - name: Build for android
