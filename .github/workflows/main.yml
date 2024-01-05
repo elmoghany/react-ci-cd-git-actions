@@ -29,4 +29,5 @@ jobs:
       run: npx expo run:android --no-build-cache
 
 
+
 #      run: npx expo run:ios --no-build-cache
