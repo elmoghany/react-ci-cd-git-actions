@@ -18,15 +18,19 @@ jobs:
       with:
         node-version: '20.10.0'
 
-    - name: Install expo
-      run: npm install — global expo-cli
-
-    - name: install other dependencies
-      run: npx expo install react-dom react-native-web @expo/webpack-config
-
-    #you can also use these flags in the following compile cmd --variant debug or --variant release
-    - name: Build for android
-      run: npx expo run:android --no-build-cache
+    - name: Install eas
+      run: npm install -g eas-cli
 
     - name: Build for ios
-      run: npx expo run:ios --no-build-cache
+      run: eas build --platform ios
+
+
+#    - name: install other dependencies
+#      run: npx expo install react-dom react-native-web @expo/webpack-config
+
+    #you can also use these flags in the following compile cmd --variant debug or --variant release
+ #   - name: Build for android
+ #     run: npx expo run:android --no-build-cache
+
+
+#      run: npx expo run:ios --no-build-cache
