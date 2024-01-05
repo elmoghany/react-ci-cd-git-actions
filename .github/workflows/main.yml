@@ -24,11 +24,11 @@ jobs:
     - name: install expo dependencies
       run: npx expo install react-dom react-native-web @expo/webpack-config
 
-    #you can also use these flags in the following compile cmd --variant debug or --variant release
     - name: Prebuild expo project
-      run: npx expo prebuild
+      run: npx expo prebuild --platform android
 
-    - name: Build for android
-      run:  eas build --local
+    #you can also use these flags in the following compile cmd --variant debug or --variant release
+#    - name: Build for android
+#      run:  eas build --local
 
 #      run: npx expo run:ios --no-build-cache
