@@ -16,11 +16,11 @@ jobs:
     - name: setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18.x'
-        cache: 'npm'
+        node-version: '20.10.0'
 
     - name: Install Dependencies
-      run: npx expo install react-dom react-native-web @expo/webpack-config
+      run: npx install expo@49.0.21
+           npx expo install react-dom react-native-web @expo/webpack-config
 
     #you can also use these flags in the following compile cmd --variant debug or --variant release
     - name: Build for android
