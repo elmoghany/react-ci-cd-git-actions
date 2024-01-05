@@ -44,7 +44,6 @@ jobs:
           --keystore-path ./my-release-key.keystore \
           --keystore-alias $KEY_ALIAS \
           --keystore-password $KEYSTORE_PASSWORD \
-          --key-password $KEY_PASSWORD \
           --type apk \
           --allow-non-https-public-url
     
