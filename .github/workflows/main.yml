@@ -30,6 +30,12 @@ jobs:
     - name: Prebuild ANDROID expo project 
       run: npx expo prebuild --platform android
 
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-react-expo-cicd-files
+        path: my-cicd-files
+
     - name: Setup Android Keystore
       env:
         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -46,7 +52,19 @@ jobs:
           --keystore-password $KEYSTORE_PASSWORD \
           --type apk \
           --allow-non-https-public-url
-    
+
+    - name: list the files
+      run: ls -ltr
+      
+    # Deploy to S3
+    - name: Deploy to S3
+      run: |
+        aws s3 cp path/to/generated/apk/ s3://moghany-vprofile-kops-state/react-cicd-apk/ --recursive
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+        AWS_REGION: 'us-east-1'
+
     #you can also use these flags in the following compile cmd --variant debug or --variant release
 #    - name: Build for android
 #      run: npx expo run:ios --no-build-cache
