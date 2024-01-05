@@ -9,15 +9,22 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '18.x'
         cache: 'npm'
+
+    - name: Install Dependencies
+      run: npx expo install react-dom react-native-web @expo/webpack-config
+
+    #you can also use these flags in the following compile cmd --variant debug or --variant release
+    - name: Build for android
+      run: npx expo run:android --no-build-cache
+
+    - name: Build for ios
+      run: npx expo run:ios --no-build-cache
