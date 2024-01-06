@@ -41,7 +41,7 @@ jobs:
 
     - name: aws s3 env
       run: |
-           aws s3 cp ./app.json s3://moghany-vprofile-kops-state/react-cicd-apk/ --recursive
+           aws s3 cp ./app.json s3://moghany-vprofile-kops-state/react-cicd-apk/
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
