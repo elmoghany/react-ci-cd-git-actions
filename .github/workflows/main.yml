@@ -50,7 +50,7 @@ jobs:
 
     - name: setup & run local server
       run: |
-           npx install http-server
+           npm install http-server
            
     - name: Build APK with turtle cli
       run: |
