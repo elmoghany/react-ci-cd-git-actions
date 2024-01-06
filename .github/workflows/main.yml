@@ -28,8 +28,14 @@ jobs:
       run: npx expo prebuild --platform android
 
 # If you want to sign the APK and publish to Google Play Store.
-    - name: build without expo using prebuild files
+    - name: build without expo => using prebuild files | AAB if signed & --mode=release | APK without prior!
       run: npx react-native build-android --mode=release
+
+    - name: install tree
+      run: npm install tree-node-cli
+
+    - name: check files created
+      run: tree-cli.exe -d
 
 ###################################
     # - name: aws s3 env
