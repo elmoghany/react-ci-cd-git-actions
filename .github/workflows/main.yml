@@ -29,11 +29,33 @@ jobs:
     - name: build without expo => using prebuild files | AAB if signed & --mode=release | APK without prior!
       run: npx react-native build-android --mode=release
 
-    - name: install tree
-      run: npm install tree-node-cli
+    - name: check if aab file was generated
+      run: ls ./android/app/build/outputs/bundle/release/
 
-    - name: check files created
-      run: tree -dS
+    - name: upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: my-artifact
+        path: android/app/build/outputs/bundle/release/app-release.aab
+
+    # - name: Upload Android Release to Play Store
+    #   uses: r0adkll/upload-google-play@v1.1.2
+    #   with: 
+    #     serviceAccountJsonPlainText: ${{ SERVICE_ACCOUNT_JSON }}
+    #     packageName: com.example.MyApp
+    #     releaseFiles: app/build/outputs/bundle/release/app-release.aab
+    #     track: production
+    #     status: inProgress
+    #     inAppUpdatePriority: 2
+    #     userFraction: 0.33
+    #     whatsNewDirectory: distribution/whatsnew
+
+      
+    # - name: install tree
+    #   run: npm install tree-node-cli
+
+    # - name: check files created
+    #   run: tree -dS
 
 
 ###################################
