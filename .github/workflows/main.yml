@@ -22,17 +22,13 @@ jobs:
     - name: install expo dependencies
       run: npx expo install react-dom react-native-web @expo/webpack-config
 
-  Prebuild-for-Android:
-    needs: Setting-up
-    runs-on: ubuntu-latest
-    steps:
     - name: Prebuild ANDROID expo project 
       run: npx expo prebuild --platform android
 
 
 # If you want to sign the APK and publish to Google Play Store.
   Building-Android:
-    needs: Prebuild-for-Android
+    needs: Setting-up
     runs-on: ubuntu-latest
     steps:
     - name: build without expo => using prebuild files | AAB if signed & --mode=release | APK without prior!
