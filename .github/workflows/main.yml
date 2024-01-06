@@ -5,15 +5,13 @@ on:
   pull_request:
     branches: [ "master" ]
 jobs:
-  setting-up:
-
+  Setting-up:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
-    - name: setup Node.js
+    - name: setup Node.js v.20.10.0 -> u can change me if u want!
       uses: actions/setup-node@v3
       with:
         node-version: '20.10.0'
@@ -24,18 +22,31 @@ jobs:
     - name: install expo dependencies
       run: npx expo install react-dom react-native-web @expo/webpack-config
 
+  Prebuild-for-Android:
+    needs: Setting-up
+    runs-on: ubuntu-latest
+    steps:
     - name: Prebuild ANDROID expo project 
       run: npx expo prebuild --platform android
 
+
+# If you want to sign the APK and publish to Google Play Store.
+  Building-Android:
+    needs: Prebuild-for-Android
+    runs-on: ubuntu-latest
+    steps:
+    - name: build without expo => using prebuild files | AAB if signed & --mode=release | APK without prior!
+      run: npx react-native build-android --mode=release
+
+  Checking-Output-Dir:
+    needs: Building-Android
+    runs-on: ubuntu-latest
+    steps:
     - name: install tree
       run: npm install tree-node-cli
 
     - name: check files created
-      run: tree -d
-
-# If you want to sign the APK and publish to Google Play Store.
-    - name: build without expo => using prebuild files | AAB if signed & --mode=release | APK without prior!
-      run: npx react-native build-android --mode=release
+      run: tree -dS
 
 
 ###################################
