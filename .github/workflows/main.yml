@@ -29,10 +29,6 @@ jobs:
     - name: build without expo => using prebuild files | AAB if signed & --mode=release | APK without prior!
       run: npx react-native build-android --mode=release
 
-  Checking-Output-Dir:
-    needs: Setting-up-n-Building
-    runs-on: ubuntu-latest
-    steps:
     - name: install tree
       run: npm install tree-node-cli
 
