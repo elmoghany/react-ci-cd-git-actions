@@ -27,41 +27,47 @@ jobs:
     - name: Prebuild ANDROID expo project 
       run: npx expo prebuild --platform android
 
+# If you want to sign the APK and publish to Google Play Store.
+    - name: build without expo using prebuild files
+      run: npx react-native build-android --mode=release
+
+###################################
+    # - name: aws s3 env
+    #   run: |
+    #        aws s3 cp ./app.json s3://moghany-vprofile-kops-state/react-cicd-apk/
+    #   env:
+    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+    #     AWS_REGION: 'us-east-1'
+    #     AWS_S3_BUCKET: 'moghany-vprofile-kops-state'
+
+    # - name: setup & run local server
+    #   run: |
+    #        npm install http-server
+
+
 ###########turtle cli##############
-    - name: Install Turtle CLI
-      run: npm install -g turtle-cli
+    # - name: Install Turtle CLI
+    #   run: npm install -g turtle-cli
     
-    - name: Setup Android Keystore
-      env:
-        KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      run: |
-        echo $KEYSTORE_BASE64 | base64 --decode > ./my-release-key.keystore
-
-    - name: aws s3 env
-      run: |
-           aws s3 cp ./app.json s3://moghany-vprofile-kops-state/react-cicd-apk/
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
-        AWS_REGION: 'us-east-1'
-        AWS_S3_BUCKET: 'moghany-vprofile-kops-state'
-
-    - name: setup & run local server
-      run: |
-           npm install http-server
+    # - name: Setup Android Keystore
+    #   env:
+    #     KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+    #     KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+    #     KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+    #   run: |
+    #     echo $KEYSTORE_BASE64 | base64 --decode > ./my-release-key.keystore
            
-    - name: Build APK with turtle cli
-      run: |
-        turtle build:android \
-          --keystore-path ./my-release-key.keystore \
-          --keystore-alias $KEY_ALIAS \
-          --keystore-password $KEYSTORE_PASSWORD \
-          --type apk \
-          --allow-non-https-public-url \
-          --public-url http://127.0.0.1:8000
-          # -o .
+    # - name: Build APK with turtle cli
+    #   run: |
+    #     turtle build:android \
+    #       --keystore-path ./my-release-key.keystore \
+    #       --keystore-alias $KEY_ALIAS \
+    #       --keystore-password $KEYSTORE_PASSWORD \
+    #       --type apk \
+    #       --allow-non-https-public-url \
+    #       --public-url http://127.0.0.1:8000
+    #       # -o .
 
 ######################      
     # # Deploy to S3
