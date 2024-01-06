@@ -31,7 +31,7 @@ jobs:
       run: npm install tree-node-cli
 
     - name: check files created
-      run: tree-cli -d
+      run: tree -d
 
 # If you want to sign the APK and publish to Google Play Store.
     - name: build without expo => using prebuild files | AAB if signed & --mode=release | APK without prior!
