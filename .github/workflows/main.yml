@@ -27,35 +27,39 @@ jobs:
       
     - name: Decode Keystore
       run: |
-        echo "${{ secrets.KEYSTORE }}" | base64 --decode > ./my-release-key.keystore
-      # env: 
-      #   KEYSTORE_BASE64: ${{ secrets.KEYSTORE }}
-      # run: |
-      #   echo $KEYSTORE_BASE64 | base64 --decode > ./my-release-key.keystore
+        echo "${{ secrets.KEYSTORE }}" | base64 --decode > .android/app/my-release-key.keystore
 
 # If you want to sign the APK and publish to Google Play Store.
     - name: Build and Sign Release without expo => using prebuild files
       env:
+         KEYSTORE_PATH: ./app/my-release-key.keystore
          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-         ALIAS: ${{ secrets.ALIAS }}
-      run: npx react-native build-android --mode=release
+         KEY_ALIAS: ${{ secrets.ALIAS }}
+      run: |
+         cd android && ./gradlew clean
+         ./gradlew assembleRelease
 
+    - name: check keystore variables @ build.gradle
+      run: cat ./app/build.gradle
+           cat ./app/.gradle/gradle.properties
+           cat ./app/gradle.properties
+    
     - name: check if aab file was generated
-      run: ls -lt ./android/app/build/outputs/bundle/release/
+      run: ls -lt ./app/build/outputs/bundle/release/
 
     - name: upload artifact to git actions
       uses: actions/upload-artifact@v4
       with:
         name: app-release.aab
-        path: ./android/app/build/outputs/bundle/release/app-release.aab
+        path: ./app/build/outputs/bundle/release/app-release.aab
 
     - name: upload artifact to google play
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         packageName: com.cammedar.free_cicd_for_react_expo
-        releaseFiles: ./android/app/build/outputs/bundle/release/app-release.aab
+        releaseFiles: ./app/build/outputs/bundle/release/app-release.aab
         track: internal
 
 #######################################################################
