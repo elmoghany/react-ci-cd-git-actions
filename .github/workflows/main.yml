@@ -43,9 +43,8 @@ jobs:
 
     - name: check keystore variables @ build.gradle
       run: |
-           cat ./app/build.gradle
-           cat ./app/.gradle/gradle.properties
-           cat ./app/gradle.properties
+           ls -lt ./app
+           ls -lt ./app/.gradle
     
     - name: check if aab file was generated
       run: ls -lt ./app/build/outputs/bundle/release/
