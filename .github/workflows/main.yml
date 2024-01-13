@@ -36,14 +36,14 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app-release.aab
-        path: android/app/build/outputs/bundle/release/app-release.aab
+        path: ./android/app/build/outputs/bundle/release/app-release.aab
 
     - name: upload artifact to google play
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         packageName: com.homeworksolverai.app
-        releaseFiles: app/build/outputs/bundle/release/app-release.aab
+        releaseFiles: ./android/app/build/outputs/bundle/release/app-release.aab
         track: qa
 
 #######################################################################
@@ -66,7 +66,7 @@ jobs:
 #######################################################################
 #######################################################################
 
-  iOS-setup-Building:
+  iOS-setup-cd-and-npx-react-native-build-ios-mode-Release:
     runs-on: macos-latest
     steps:
     - name: Checkout Repository
@@ -98,7 +98,68 @@ jobs:
         xcode-version: '13.2.1' # Set your Xcode version here
 
     - name: build without expo => using prebuild files
-      run: npx react-native build-ios --mode Release
+      run: cd .. && npx react-native build-ios --mode Release
+            #--configuration Release
+
+    - name: check if ipa file was generated
+      run: |
+        ls -ltr ./*.xcworkspace
+        ls -ltr ./*.xcarchive
+        
+###################################################
+#######################################################################
+#######################################################################
+#######################################################################
+
+    # - name: Upload Android Release to Play Store
+    #   uses: r0adkll/upload-google-play@v1.1.2
+    #   with: 
+    #     serviceAccountJsonPlainText: ${{ SERVICE_ACCOUNT_JSON }}
+    #     packageName: com.example.MyApp
+    #     releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
+    #     track: production
+    #     status: inProgress
+    #     whatsNewDirectory: distribution/whatsnew
+    #     inAppUpdatePriority: 2
+    #     userFraction: 0.33
+
+#######################################################################
+#######################################################################
+#######################################################################
+
+  iOS-setup-bundle-install-bundle-exec-pod-install:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: setup Node.js v.20.10.0 -> u can change me if u want!
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.10.0'
+        
+    - name: install expo
+      run: npm install expo
+
+    - name: install expo dependencies
+      run: npx expo install react-dom react-native-web @expo/webpack-config
+
+    - name: Install CocoaPods
+      run: sudo gem install cocoapods
+
+    - name: Prebuild ios expo project 
+      run: npx expo prebuild --platform ios
+
+    - name: Install Pods
+      run: cd ios && pod install
+
+    - name: Set up Xcode version (optional)
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '13.2.1' # Set your Xcode version here
+
+    - name: build without expo => using prebuild files
+      run: bundle install && bundle exec pod install
             #--configuration Release
 
     - name: check if ipa file was generated
@@ -106,8 +167,51 @@ jobs:
         ls -ltr ./*.xcworkspace
         ls -ltr ./*.xcarchive
 
-###################################################
-      
+#######################################################################
+#######################################################################
+#######################################################################
+
+  iOS-setup-npx-react-native-build-ios:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: setup Node.js v.20.10.0 -> u can change me if u want!
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.10.0'
+        
+    - name: install expo
+      run: npm install expo
+
+    - name: install expo dependencies
+      run: npx expo install react-dom react-native-web @expo/webpack-config
+
+    - name: Install CocoaPods
+      run: sudo gem install cocoapods
+
+    - name: Prebuild ios expo project 
+      run: npx expo prebuild --platform ios
+
+    - name: Install Pods
+      run: cd ios && pod install
+
+    - name: Set up Xcode version (optional)
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '13.2.1' # Set your Xcode version here
+
+    - name: build without expo => using prebuild files
+      run: npx react-native build-ios
+            #--configuration Release
+
+    - name: check if ipa file was generated
+      run: |
+        ls -ltr ./*.xcworkspace
+        ls -ltr ./*.xcarchive
+
+######################################
     # - name: install tree
     #   run: npm install tree-node-cli
 
