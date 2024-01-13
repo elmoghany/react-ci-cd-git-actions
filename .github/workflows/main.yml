@@ -27,8 +27,8 @@ jobs:
       
     - name: Decode Keystore
       run: |
-        mkdir -p android/app
-        echo "${{ secrets.KEYSTORE }}" | base64 --decode > .android/app/my-release-key.keystore
+        mkdir -p ./android/app
+        echo "${{ secrets.KEYSTORE }}" | base64 --decode > ./android/app/my-release-key.keystore
 
 # If you want to sign the APK and publish to Google Play Store.
     - name: Build and Sign Release without expo => using prebuild files
