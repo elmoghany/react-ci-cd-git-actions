@@ -36,14 +36,14 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app-release.aab
-        path: android/app/build/outputs/bundle/release/app-release.aab
+        path: android/app/build/outputs/bundle/release/app-release.apk
 
     - name: upload artifact to google play
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         packageName: com.homeworksolverai.app
-        releaseFiles: app/build/outputs/bundle/release/app-release.aab
+        releaseFiles: app/build/outputs/bundle/release/app-release.apk
         track: qa
 
 #######################################################################
@@ -86,6 +86,9 @@ jobs:
     - name: Install CocoaPods
       run: sudo gem install cocoapods
 
+    - name: Prebuild ios expo project 
+      run: npx expo prebuild --platform ios
+
     - name: Install Pods
       run: cd ios && pod install
 
@@ -93,9 +96,6 @@ jobs:
       uses: maxim-lobanov/setup-xcode@v1
       with:
         xcode-version: '13.2.1' # Set your Xcode version here
-
-    - name: Prebuild ios expo project 
-      run: npx expo prebuild --platform ios
 
     - name: build without expo => using prebuild files
       run: npx react-native build-ios --mode Release
