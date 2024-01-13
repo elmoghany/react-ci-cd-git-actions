@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.elmoghany.free_cicd_for_react_expo",
+      "bundleIdentifier": "com.elmoghany.freeCICDforReactExpo",
       "buildNumber": "1.0.0"
     },
     "android": {
