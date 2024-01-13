@@ -42,7 +42,8 @@ jobs:
          ./gradlew assembleRelease
 
     - name: check keystore variables @ build.gradle
-      run: cat ./app/build.gradle
+      run: |
+           cat ./app/build.gradle
            cat ./app/.gradle/gradle.properties
            cat ./app/gradle.properties
     
