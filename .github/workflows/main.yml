@@ -26,10 +26,12 @@ jobs:
       run: npx expo prebuild --platform android
       
     - name: Decode Keystore
-      env: 
-        KEYSTORE_BASE64: ${{ secrets.KEYSTORE }}
       run: |
-        echo $KEYSTORE_BASE64 | base64 --decode > ./my-release-key.keystore
+        echo "${{ secrets.KEYSTORE }}" | base64 --decode > ./my-release-key.keystore
+      # env: 
+      #   KEYSTORE_BASE64: ${{ secrets.KEYSTORE }}
+      # run: |
+      #   echo $KEYSTORE_BASE64 | base64 --decode > ./my-release-key.keystore
 
 # If you want to sign the APK and publish to Google Play Store.
     - name: Build and Sign Release without expo => using prebuild files
