@@ -24,9 +24,17 @@ jobs:
 
     - name: Prebuild ANDROID expo project 
       run: npx expo prebuild --platform android
+      
+    - name: Decode Keystore
+      run: |
+        echo ${{ secrets.KEYSTORE }} | base64 -d > ./android/app/my-release-key.keystore
 
 # If you want to sign the APK and publish to Google Play Store.
-    - name: build without expo => using prebuild files | AAB if signed & --mode=release | APK without prior!
+    - name: Build and Sign Release without expo => using prebuild files
+      env:
+         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+         ALIAS: ${{ secrets.ALIAS }}
       run: npx react-native build-android --mode=release
 
     - name: check if aab file was generated
@@ -42,7 +50,7 @@ jobs:
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-        packageName: com.homeworksolverai.app
+        packageName: com.elmoghany.free_cicd_for_react_expo
         releaseFiles: ./android/app/build/outputs/bundle/release/app-release.aab
         track: internal
 
