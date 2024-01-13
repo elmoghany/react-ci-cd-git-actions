@@ -41,11 +41,12 @@ jobs:
          cd android && ./gradlew clean
          ./gradlew assembleRelease
 
+    - name: current path
+      run:  pwd
+
     - name: check keystore variables @ build.gradle
-      run: |
-           ls -lt ./app
-           ls -lt ./app/.gradle
-    
+      run:  ls -lt
+           
     - name: check if aab file was generated
       run: ls -lt ./app/build/outputs/bundle/release/
 
