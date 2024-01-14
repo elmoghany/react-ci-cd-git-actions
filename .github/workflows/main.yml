@@ -30,33 +30,34 @@ jobs:
         mkdir -p ./android/app
         echo "${{ secrets.KEYSTORE }}" | base64 --decode > ./android/app/my-release-key.keystore
 
-# If you want to sign the APK and publish to Google Play Store.
-    - name: clean build without expo => using prebuild files
-      env:
-         KEYSTORE_PATH: ./android/app/my-release-key.keystore
-         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-         KEY_ALIAS: ${{ secrets.ALIAS }}
-      run: cd android && ./gradlew clean
+    # - name: clean build without expo => using prebuild files
+    #   env:
+    #      KEYSTORE_PATH: ./android/app/my-release-key.keystore
+    #      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+    #      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+    #      KEY_ALIAS: ${{ secrets.ALIAS }}
+    #   run: cd android && ./gradlew clean
 
+
+    #assembleRelease => apk
+    #bundleRelease => aab
     - name: Build and Sign Release without expo => using prebuild files
       env:
          KEYSTORE_PATH: ./android/app/my-release-key.keystore
          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
          KEY_ALIAS: ${{ secrets.ALIAS }}
-      run: cd ./android && ./gradlew assembleRelease
+      run: cd ./android && ./gradlew bundleRelease
 
     - name: check keystore variables @ build.gradle
       run:  |
             ls -lt ./android/
             ls -lt ./android/app/
             ls -lt ./android/app/build
-            cat ./android/app/build.gradle
             ls -lt ./android/app/build/outputs
+            cat ./android/app/build.gradle
             ls -lt ./android/app/build/outputs/bundle
             ls -lt ./android/app/build/outputs/bundle/release
-
 
     - name: upload artifact to git actions
       uses: actions/upload-artifact@v4
