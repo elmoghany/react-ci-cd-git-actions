@@ -31,7 +31,7 @@ jobs:
         echo "${{ secrets.KEYSTORE }}" | base64 --decode > ./android/app/my-release-key.keystore
 
 # If you want to sign the APK and publish to Google Play Store.
-    - name: Build and Sign Release without expo => using prebuild files
+    - name: clean build without expo => using prebuild files
       env:
          KEYSTORE_PATH: ./app/my-release-key.keystore
          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -39,38 +39,35 @@ jobs:
          KEY_ALIAS: ${{ secrets.ALIAS }}
       run: cd android && ./gradlew clean
 
-    - name: current path
-      run:  pwd
-
-    - name: check keystore variables @ build.gradle
-      run:  ls -lt
-
     - name: Build and Sign Release without expo => using prebuild files
       env:
          KEYSTORE_PATH: ./app/my-release-key.keystore
          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
          KEY_ALIAS: ${{ secrets.ALIAS }}
-      run: ./gradlew assembleRelease
+      run: cd ./android && ./gradlew assembleRelease
 
     - name: check keystore variables @ build.gradle
-      run:  ls -lt
+      run:  |
+            ls -lt ./android/
+            ls -lt ./android/app/
+            cat ./android/app/build.gradle
            
     - name: check if aab file was generated
-      run: ls -lt ./app/build/outputs/bundle/release/
+      run: ls -lt ./android/app/build/outputs/bundle/release/
 
     - name: upload artifact to git actions
       uses: actions/upload-artifact@v4
       with:
         name: app-release.aab
-        path: ./app/build/outputs/bundle/release/app-release.aab
+        path: ./android/app/build/outputs/bundle/release/app-release.aab
 
     - name: upload artifact to google play
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         packageName: com.cammedar.free_cicd_for_react_expo
-        releaseFiles: ./app/build/outputs/bundle/release/app-release.aab
+        releaseFiles: ./android/app/build/outputs/bundle/release/app-release.aab
         track: internal
 
 #######################################################################
