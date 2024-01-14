@@ -33,11 +33,11 @@ jobs:
     - name: Update gradle.properties
       run: |
         cd ./android
-        echo "KEYSTORE_PATH="my-release-key.keystore" >> gradle.properties
-        # echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> gradle.properties
-        # echo "KEY_ALIAS=${{ secrets.ALIAS }}" >> gradle.properties
-        # echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> gradle.properties
-        # cat gradle.properties
+        echo "KEYSTORE_PATH=my-release-key.keystore" >> gradle.properties
+        echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> gradle.properties
+        echo "KEY_ALIAS=${{ secrets.ALIAS }}" >> gradle.properties
+        echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> gradle.properties
+        cat gradle.properties
 
     - name: Update build.gradle
       run: |
