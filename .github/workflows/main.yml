@@ -30,14 +30,21 @@ jobs:
         mkdir -p ./android/app
         echo "${{ secrets.KEYSTORE }}" | base64 --decode > ./android/app/my-release-key.keystore
 
-    # - name: clean build without expo => using prebuild files
-    #   env:
-    #      KEYSTORE_PATH: ./android/app/my-release-key.keystore
-    #      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-    #      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-    #      KEY_ALIAS: ${{ secrets.ALIAS }}
-    #   run: cd android && ./gradlew clean
+    - name: Update gradle.properties
+      run: |
+        cd ./android
+        echo "KEYSTORE_PATH="my-release-key.keystore" >> gradle.properties
+        echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> gradle.properties
+        echo "KEY_ALIAS=${{ secrets.ALIAS }}" >> gradle.properties
+        echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> gradle.properties
+        cat gradle.properties
 
+    - name: Update build.gradle
+      run: |
+        cd android
+        sed -i '/signingConfigs {/a \        release {\n            storeFile file(KEYSTORE_PATH)\n            storePassword KEYSTORE_PASSWORD\n            keyAlias KEY_ALIAS\n            keyPassword KEY_PASSWORD\n        }' app/build.gradle
+        sed -i 's/signingConfig signingConfigs.debug/signingConfig signingConfigs.release/' app/build.gradle
+        cat ./app/build.gradle
 
     #assembleRelease => apk
     #bundleRelease => aab
@@ -69,7 +76,7 @@ jobs:
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-        packageName: com.cammedar.free_cicd_for_react_expo
+        packageName: com.elmoghany.free_cicd_for_react_expo
         releaseFiles: ./android/app/build/outputs/bundle/release/app-release.aab
         track: internal
 
