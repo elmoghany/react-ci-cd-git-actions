@@ -5,71 +5,71 @@ on:
   pull_request:
     branches: [ "master" ]
 jobs:
-  Android-setup-Building:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+  # Android-setup-Building:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout Repository
+  #     uses: actions/checkout@v3
 
-    - name: setup Node.js v.20.10.0 -> u can change me if u want!
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20.10.0'
+  #   - name: setup Node.js v.20.10.0 -> u can change me if u want!
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       node-version: '20.10.0'
         
-    - name: install expo
-      run: npm install expo
+  #   - name: install expo
+  #     run: npm install expo
 
-    - name: install expo dependencies
-      run: npx expo install react-dom react-native-web @expo/webpack-config
+  #   - name: install expo dependencies
+  #     run: npx expo install react-dom react-native-web @expo/webpack-config
 
-    - name: Prebuild ANDROID expo project 
-      run: npx expo prebuild --platform android
+  #   - name: Prebuild ANDROID expo project 
+  #     run: npx expo prebuild --platform android
       
-    - name: Decode Keystore
-      run: |
-        mkdir -p ./android/app
-        echo "${{ secrets.KEYSTORE }}" | base64 --decode > ./android/app/my-release-key.keystore
+  #   - name: Decode Keystore
+  #     run: |
+  #       mkdir -p ./android/app
+  #       echo "${{ secrets.KEYSTORE }}" | base64 --decode > ./android/app/my-release-key.keystore
 
-    - name: Update gradle.properties
-      run: |
-        cd ./android
-        echo "KEYSTORE_PATH=my-release-key.keystore" >> gradle.properties
-        echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> gradle.properties
-        echo "KEY_ALIAS=${{ secrets.ALIAS }}" >> gradle.properties
-        echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> gradle.properties
-        cat gradle.properties
+  #   - name: Update gradle.properties
+  #     run: |
+  #       cd ./android
+  #       echo "KEYSTORE_PATH=my-release-key.keystore" >> gradle.properties
+  #       echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> gradle.properties
+  #       echo "KEY_ALIAS=${{ secrets.ALIAS }}" >> gradle.properties
+  #       echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> gradle.properties
+  #       cat gradle.properties
 
-    - name: Update build.gradle
-      run: |
-        cd android
-        sed -i '/signingConfigs {/a \        release {\n            storeFile file(KEYSTORE_PATH)\n            storePassword KEYSTORE_PASSWORD\n            keyAlias KEY_ALIAS\n            keyPassword KEY_PASSWORD\n        }' app/build.gradle
-        sed -i 's/signingConfig signingConfigs.debug/signingConfig signingConfigs.release/' app/build.gradle
-        cat ./app/build.gradle
+  #   - name: Update build.gradle
+  #     run: |
+  #       cd android
+  #       sed -i '/signingConfigs {/a \        release {\n            storeFile file(KEYSTORE_PATH)\n            storePassword KEYSTORE_PASSWORD\n            keyAlias KEY_ALIAS\n            keyPassword KEY_PASSWORD\n        }' app/build.gradle
+  #       sed -i 's/signingConfig signingConfigs.debug/signingConfig signingConfigs.release/' app/build.gradle
+  #       cat ./app/build.gradle
 
-    #assembleRelease => apk
-    #bundleRelease => aab
-    - name: Build and Sign Release without expo => using prebuild files
-      env:
-         KEYSTORE_PATH: ./android/app/my-release-key.keystore
-         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-         KEY_ALIAS: ${{ secrets.ALIAS }}
-      run: cd ./android && ./gradlew bundleRelease
+  #   #assembleRelease => apk
+  #   #bundleRelease => aab
+  #   - name: Build and Sign Release without expo => using prebuild files
+  #     env:
+  #        KEYSTORE_PATH: ./android/app/my-release-key.keystore
+  #        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+  #        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+  #        KEY_ALIAS: ${{ secrets.ALIAS }}
+  #     run: cd ./android && ./gradlew bundleRelease
 
-    - name: upload artifact to git actions
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-release.aab
-        path: ./android/app/build/outputs/bundle/release/app-release.aab
+  #   - name: upload artifact to git actions
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: app-release.aab
+  #       path: ./android/app/build/outputs/bundle/release/app-release.aab
 
-    - name: upload artifact to google play
-      uses: r0adkll/upload-google-play@v1
-      with:
-        serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-        packageName: com.elmoghany.free_cicd_for_react_expo
-        releaseFiles: ./android/app/build/outputs/bundle/release/app-release.aab
-        track: internal
-        status: draft  # Set the status to draft
+  #   - name: upload artifact to google play
+  #     uses: r0adkll/upload-google-play@v1
+  #     with:
+  #       serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+  #       packageName: com.elmoghany.free_cicd_for_react_expo
+  #       releaseFiles: ./android/app/build/outputs/bundle/release/app-release.aab
+  #       track: internal
+  #       status: draft  # Set the status to draft
                 #inProgress
     #     inAppUpdatePriority: 2
     #     userFraction: 0.33
@@ -114,6 +114,7 @@ jobs:
 
     - name: Create ExportOptions.plist
       run: |
+          mkdir -p ios/Configurations 
           cd ios/Configurations
           echo '<?xml version="1.0" encoding="UTF-8"?>' > ExportOptions.plist
           echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' >> ExportOptions.plist
