@@ -33,7 +33,7 @@ jobs:
 # If you want to sign the APK and publish to Google Play Store.
     - name: clean build without expo => using prebuild files
       env:
-         KEYSTORE_PATH: ./app/my-release-key.keystore
+         KEYSTORE_PATH: ./android/app/my-release-key.keystore
          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
          KEY_ALIAS: ${{ secrets.ALIAS }}
@@ -41,7 +41,7 @@ jobs:
 
     - name: Build and Sign Release without expo => using prebuild files
       env:
-         KEYSTORE_PATH: ./app/my-release-key.keystore
+         KEYSTORE_PATH: ./android/app/my-release-key.keystore
          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
          KEY_ALIAS: ${{ secrets.ALIAS }}
@@ -51,10 +51,12 @@ jobs:
       run:  |
             ls -lt ./android/
             ls -lt ./android/app/
+            ls -lt ./android/app/build
             cat ./android/app/build.gradle
-           
-    - name: check if aab file was generated
-      run: ls -lt ./android/app/build/outputs/bundle/release/
+            ls -lt ./android/app/build/outputs
+            ls -lt ./android/app/build/outputs/bundle
+            ls -lt ./android/app/build/outputs/bundle/release
+
 
     - name: upload artifact to git actions
       uses: actions/upload-artifact@v4
