@@ -34,10 +34,10 @@ jobs:
       run: |
         cd ./android
         echo "KEYSTORE_PATH="my-release-key.keystore" >> gradle.properties
-        echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> gradle.properties
-        echo "KEY_ALIAS=${{ secrets.ALIAS }}" >> gradle.properties
-        echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> gradle.properties
-        cat gradle.properties
+        # echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> gradle.properties
+        # echo "KEY_ALIAS=${{ secrets.ALIAS }}" >> gradle.properties
+        # echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> gradle.properties
+        # cat gradle.properties
 
     - name: Update build.gradle
       run: |
@@ -55,16 +55,6 @@ jobs:
          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
          KEY_ALIAS: ${{ secrets.ALIAS }}
       run: cd ./android && ./gradlew bundleRelease
-
-    - name: check keystore variables @ build.gradle
-      run:  |
-            ls -lt ./android/
-            ls -lt ./android/app/
-            ls -lt ./android/app/build
-            ls -lt ./android/app/build/outputs
-            cat ./android/app/build.gradle
-            ls -lt ./android/app/build/outputs/bundle
-            ls -lt ./android/app/build/outputs/bundle/release
 
     - name: upload artifact to git actions
       uses: actions/upload-artifact@v4
