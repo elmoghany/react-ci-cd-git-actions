@@ -158,9 +158,9 @@ jobs:
           cd ios
           mkdir my-archive-path
           # automatic signing
-          xcodebuild clean archive -workspace reactcicdgitactions.xcworkspace -scheme reactcicdgitactions -archivePath my-archive-path/my-archive.xcarchive DEVELOPMENT_TEAM=4NM4NNL8ZG -allowProvisioningUpdates | xcpretty
+          # xcodebuild clean archive -workspace reactcicdgitactions.xcworkspace -scheme reactcicdgitactions -archivePath my-archive-path/my-archive.xcarchive DEVELOPMENT_TEAM=4NM4NNL8ZG -allowProvisioningUpdates | xcpretty
           # for manual signing: use the next line
-          # xcodebuild clean archive -workspace reactcicdgitactions.xcworkspace -scheme reactcicdgitactions -archivePath my-archive-path/my-archive.xcarchive DEVELOPMENT_TEAM=4NM4NNL8ZG CODE_SIGN_IDENTITY="Curawella LLC" PROVISIONING_PROFILE_SPECIFIER="profile-provision-moghany-api" | xcpretty
+          xcodebuild clean archive -workspace reactcicdgitactions.xcworkspace -scheme reactcicdgitactions -archivePath my-archive-path/my-archive.xcarchive DEVELOPMENT_TEAM=4NM4NNL8ZG CODE_SIGN_IDENTITY="Curawella LLC" PROVISIONING_PROFILE_SPECIFIER="profile-provision-moghany-api" -allowProvisioningUpdates | xcpretty
           ls -lt
           ls -lt my-archive-path
 
