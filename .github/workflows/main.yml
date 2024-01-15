@@ -164,7 +164,7 @@ jobs:
       run:  |
           cd ios
           mkdir my-archive-path
-          xcode-project use-profiles
+          # xcode-project use-profiles
           # automatic signing
           # xcodebuild clean archive -workspace reactcicdgitactions.xcworkspace -scheme scheme1 -configuration Test -archivePath my-archive-path/my-archive.xcarchive DEVELOPMENT_TEAM=4NM4NNL8ZG -allowProvisioningUpdates | xcpretty
           # for manual signing: use the next line
