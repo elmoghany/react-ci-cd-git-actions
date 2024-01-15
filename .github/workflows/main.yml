@@ -116,10 +116,10 @@ jobs:
       run: |
         cd ios
         echo ${{ secrets.CERTIFICATE_BASE64 }} | base64 --decode > certificate.p12
-        security create-keychain -p "" build.keychain
-        security import certificate.p12 -k build.keychain -P ${{ secrets.CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
-        security list-keychains -s build.keychain
-        security default-keychain -s build.keychain
+        # security create-keychain -p "" build.keychain
+        # security import certificate.p12 -k build.keychain -P ${{ secrets.CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+        # security list-keychains -s build.keychain
+        # security default-keychain -s build.keychain
     
     - name: Install Provisioning Profile
       run: |
