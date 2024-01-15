@@ -152,15 +152,24 @@ jobs:
           echo '    <string>Development</string>' >> ExportOptions.plist
           echo '</dict>' >> ExportOptions.plist
           echo '</plist>' >> ExportOptions.plist
-          
+
+    - name: updating profile for manual code signing
+      run: |
+          cd ios
+          echo 'DevelopmentTeam = 4NM4NNL8ZG' >> reactcicdgitactions.xcodeproj/project.pbxproj
+          echo 'ProvisioningStyle = Manual' >> reactcicdgitactions.xcodeproj/project.pbxproj
+          echo 'PROVISIONING_PROFILE_SPECIFIER = "profile-provision-moghany-api"' >> reactcicdgitactions.xcodeproj/project.pbxproj
+
     - name: build without expo => using prebuild files
       run:  |
           cd ios
           mkdir my-archive-path
+          xcode-project use-profiles
           # automatic signing
-          # xcodebuild clean archive -workspace reactcicdgitactions.xcworkspace -scheme reactcicdgitactions -archivePath my-archive-path/my-archive.xcarchive DEVELOPMENT_TEAM=4NM4NNL8ZG -allowProvisioningUpdates | xcpretty
+          # xcodebuild clean archive -workspace reactcicdgitactions.xcworkspace -scheme scheme1 -configuration Test -archivePath my-archive-path/my-archive.xcarchive DEVELOPMENT_TEAM=4NM4NNL8ZG -allowProvisioningUpdates | xcpretty
           # for manual signing: use the next line
-          xcodebuild clean archive -workspace reactcicdgitactions.xcworkspace -scheme reactcicdgitactions -archivePath my-archive-path/my-archive.xcarchive DEVELOPMENT_TEAM=4NM4NNL8ZG CODE_SIGN_IDENTITY="Curawella LLC" PROVISIONING_PROFILE_SPECIFIER="profile-provision-moghany-api" | xcpretty
+          # xcodebuild clean archive -workspace reactcicdgitactions.xcworkspace -scheme scheme1 -configuration Test -archivePath my-archive-path/my-archive.xcarchive DEVELOPMENT_TEAM=4NM4NNL8ZG CODE_SIGN_IDENTITY="Curawella LLC" PROVISIONING_PROFILE_SPECIFIER="profile-provision-moghany-api" | xcpretty
+          xcodebuild clean archive -workspace reactcicdgitactions.xcworkspace -scheme scheme1 -configuration Test -archivePath my-archive-path/my-archive.xcarchive | xcpretty
           ls -lt
           ls -lt my-archive-path
 
