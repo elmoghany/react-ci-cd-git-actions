@@ -111,6 +111,22 @@ jobs:
       run: |
           cd ios && pod install
           ls -lt
+          
+    - name: Install Apple Certificate
+      run: |
+        cd ios
+        echo ${{ secrets.CERTIFICATE_BASE64 }} | base64 --decode > certificate.p12
+        security create-keychain -p "" build.keychain
+        security import certificate.p12 -k build.keychain -P ${{ secrets.CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+        security list-keychains -s build.keychain
+        security default-keychain -s build.keychain
+    
+    - name: Install Provisioning Profile
+      run: |
+        cd ios
+        echo ${{ secrets.PROFILE_BASE64 }} | base64 --decode > profile.mobileprovision
+        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+        cp profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
 
     - name: Create ExportOptions.plist
       run: |
@@ -141,7 +157,7 @@ jobs:
       run:  |
           cd ios
           mkdir my-archive-path
-          xcodebuild clean archive -workspace reactcicdgitactions.xcworkspace -scheme reactcicdgitactions -archivePath my-archive-path/my-archive.xcarchive DEVELOPMENT_TEAM=4NM4NNL8ZG -allowProvisioningUpdates | xcpretty
+          xcodebuild clean archive -workspace reactcicdgitactions.xcworkspace -scheme reactcicdgitactions -archivePath my-archive-path/my-archive.xcarchive DEVELOPMENT_TEAM=4NM4NNL8ZG CODE_SIGN_IDENTITY="Curawella LLC" PROVISIONING_PROFILE_SPECIFIER="profile-provision-moghany-api" | xcpretty
           ls -lt
           ls -lt my-archive-path
 
