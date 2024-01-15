@@ -124,7 +124,7 @@ jobs:
     - name: Install Provisioning Profile
       run: |
         cd ios
-        echo ${{ secrets.PROFILE_BASE64 }} | base64 --decode > profile.mobileprovision
+        echo "${{ secrets.PROFILE_BASE64 }}" | base64 --decode > profile.mobileprovision
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         cp profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
 
